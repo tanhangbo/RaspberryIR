@@ -1,5 +1,5 @@
 # RaspberryIR
-IR sender and receiver using rpi
+IR sender and receiver using rpi(currently support Midea air conditioner)
 
 
 This is a program than can decode IR signal in the air, and send IR signals to machines such as TVs.

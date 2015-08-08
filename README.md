@@ -16,7 +16,7 @@ Before build, wiringPi must be installed on rpi, refer to:
 I use two peripherals bought on taobao:
 
 
-	![](https://raw.githubusercontent.com/tanhangbo/RaspberryIR/master/IR.png)
+![](https://raw.githubusercontent.com/tanhangbo/RaspberryIR/master/IR.png)
 
 	
 	

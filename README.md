@@ -16,7 +16,8 @@ Before build, wiringPi must be installed on rpi, refer to:
 I use two peripherals bought on taobao:
 
 
-	[pictures]
+	![](https://raw.githubusercontent.com/tanhangbo/RaspberryIR/master/IR.png)
+
 	
 	
 The sender is a simple diode, with resister and something I dont know.You must use PWM to generate 38K output, or use UART to send 0x55(a trick) to generate PWM.

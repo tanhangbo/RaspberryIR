@@ -13,6 +13,9 @@
 const int IR_INPUT = 4;/* GPIO4*/
 typedef int bool;
 
+long long int low_high_list[1000];
+int low_high_list_index = 0;
+
 typedef enum code_wave {
 	
 	NOTHING = 0,
@@ -51,7 +54,7 @@ long long int get_timer_diff()
 void parse_code_byte(int bit)
 {
 	int byte_index = code_bit_index  / 8;
-	code_byte[byte_index] |=  (bit << ((code_bit_index - byte_index*8)%8));
+	code_byte[byte_index] |=  (bit << (7 - ((code_bit_index - byte_index*8)%8)));
 	code_bit_index++;
 }
 
@@ -101,21 +104,27 @@ void parse_code_wave(long long int time_diff, bool high)
 		code_wave cur_wave_code;
 		static code_wave last_wave_code = NOTHING;
 
-		if ((time_diff > 4000) && (time_diff < 4500)) {
+		if ((time_diff > 4300) && (time_diff < 4800)) {
 			if (high)
 				cur_wave_code = LONG_SYNC_HIGH;
 			else
 				cur_wave_code = LONG_SYNC_LOW;
 
 		} else if ((time_diff > 400) && (time_diff < 700)) {
-			if (high)
+			if (high) {
 				cur_wave_code = NORMAL_HIGH;
-			else
+				//printf("NORMAL_HIGH\n");
+			} else {
 				cur_wave_code = NORMAL_LOW;
+				//printf("NORMAL_LOW\n");
+
+			}
 		}
-		else if ((time_diff > 1500) && (time_diff < 1700)) {
-			if (high)
+		else if ((time_diff > 1500) && (time_diff < 1800)) {
+			if (high) {
 				cur_wave_code = NORMAL_LONG_HIGH;
+				//printf("NORMAL_LONG_HIGH\n");
+			}
 		}
 		else
 			cur_wave_code = NOTHING;
@@ -133,6 +142,18 @@ static void ir_int(void) {
 	
 	long long int time_diff = 0;
 	time_diff =  get_timer_diff();
+	
+	
+	/* for debug */
+	//if (time_diff  > 3000) {
+		low_high_list[low_high_list_index++] = time_diff;
+		if (low_high_list_index == 1000)
+			low_high_list_index = 0;
+	//}
+	//printf("%lld,", time_diff);
+	
+	
+	
 	//the last value is reversed from now's value to pass in parse_code_wave
 	if (digitalRead(IR_INPUT)) {
 		parse_code_wave(time_diff, 0);	
@@ -210,6 +231,13 @@ int main(void)
     while(1) {
 		delay(1000); // wait 1 second
 
+		/*
+		for (i = 0; i < 1000; i++)
+			printf("%lld,",low_high_list[i]); 
+		*/
+	
+		
+		
 		int byte_index = code_bit_index  / 8;
 
 		int i = 0;
